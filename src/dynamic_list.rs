@@ -112,6 +112,20 @@ impl<T: PartialEq + Copy> DynamicList<T> {
             i += 1;
             current = node.next.as_mut();
         }
+        false
+    }
+
+    /// Updates the first occurrence of the given data.
+    pub fn update_element(&mut self, old_data: T, new_data: T) -> bool {
+        let mut current = self.head.as_mut();
+
+        while let Some(node) = current {
+            if node.data == old_data {
+                node.data = new_data;
+                return true;
+            }
+            current = node.next.as_mut();
+        }
 
         false
     }
