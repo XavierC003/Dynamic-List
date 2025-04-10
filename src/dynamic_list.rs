@@ -1,40 +1,47 @@
+#[derive(Debug)]
 pub struct Node<T> {
     pub data: T,
     pub next: Option<Box<Node<T>>>,
 }
 
+#[derive(Debug)]
 pub struct DynamicList<T> {
     head: Option<Box<Node<T>>>,
 }
 
 impl<T: PartialEq + Copy> DynamicList<T> {
     pub fn new() -> Self {
-        Self { head: None }
+        DynamicList { head: None }
     }
 
+    /// Inserts data at the tail of the list.
     pub fn insert(&mut self, data: T) {
         let new_node = Box::new(Node { data, next: None });
         match self.head.as_mut() {
             None => self.head = Some(new_node),
-            Some(mut node) => {
-                while let Some(ref mut next) = node.next {
-                    node = next;
+            Some(mut current) => {
+                let mut current = current.as_mut();
+                while current.next.is_some() {
+                    current = current.next.as_mut().unwrap();
                 }
-                node.next = Some(new_node);
+                current.next = Some(new_node);
             }
         }
     }
 
     pub fn get(&self, index: usize) -> Option<T> {
-        let mut current = &self.head;
-        let mut count = 0;
+        let mut current = self.head.as_ref();
+        let mut i = 0;
+    
         while let Some(node) = current {
-            if count == index {
+            if i == index {
                 return Some(node.data);
             }
-            current = &node.next;
-            count += 1;
+            i += 1;
+            current = node.next.as_ref();
         }
+    
         None
     }
+    
 }
