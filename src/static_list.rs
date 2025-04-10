@@ -111,5 +111,32 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         }
         false // data not found
     }
+    /// Deletes the node at index (0-based).
+    /// Returns true if successful, false otherwise.
+    pub fn delete_at_index(&mut self, index: usize) -> bool {
+        if index >= N {
+            return false;
+        }
+        let mut current_index: Option<usize> = self.head;
+        let mut prev_index: Option<usize> = None;
+
+        while let Some(current) = current_index {
+            if current == index {
+                if let Some(prev) = prev_index {
+                    let next = self.nodes[current].as_ref().unwrap().next;
+                    self.nodes[prev].as_mut().unwrap().next = next;
+                } else {
+                    self.head = self.nodes[current].as_ref().unwrap().next;
+                }
+                self.nodes[current] = None;
+                self.free.push(current);
+                return true;
+            }
+            prev_index = current_index;
+            current_index = self.nodes[current].as_ref().unwrap().next;
+        }
+        false
+    }
+    
 
 }
