@@ -11,6 +11,7 @@ pub struct StaticList<T, const N: usize> {
 }
 
 impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
+    /// Creates a new static list
     pub fn new() -> Self {
         let mut free = Vec::with_capacity(N);
         for i in (0..N).rev() {
@@ -54,4 +55,61 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         }
         Some(self.nodes[current]?.data)
     }
+    /// Insert data at index (0-based).
+    /// Returns true if successful, false otherwise.
+    pub fn insert_at_index(&mut self, index: usize, data: T) -> bool {
+        if index >= N {
+            return false;
+        }
+        if let Some(free_index) = self.free.pop() {
+            let new_node = Node { data, next: None };
+            if index == 0 {
+               let old_head = self.head.take();
+                self.head = Some(free_index);
+                self.nodes[free_index] = Some(new_node);
+                self.nodes[free_index].as_mut().unwrap().next = old_head;
+                return true
+            }
+            let mut current = self.head;
+            let mut prev_index = None;
+
+            while let Some(current_index) = current {
+                if current_index == index {
+                    break;
+                }
+                prev_index = current;
+                current = self.nodes[current_index].as_ref().and_then(|n| n.next);
+            }
+            if let Some(prev_index) = prev_index {
+                self.nodes[free_index] = Some(new_node);
+                let node = self.nodes[prev_index].as_mut().unwrap();
+                node.next = Some(free_index);
+                return true;
+            }
+        } 
+        false // failed to insert
+    }
+
+    /// Deletes the first occurrence of the given data.
+    pub fn delete_element(&mut self, data: T) -> bool {
+        let mut current_index = self.head;
+
+        while let Some(index) = current_index {
+            if self.nodes[index].as_ref().unwrap().data == data {
+                if self.nodes[index].as_ref().unwrap().next.is_some() {
+                    self.nodes[index] = None;
+                    self.free.push(index);
+                } else {
+                    self.nodes[index] = None;
+                    self.free.push(index);
+                    self.head;
+                    return true;
+                }
+                return true;
+            }
+            current_index = self.nodes[index].as_ref().unwrap().next;
+        }
+        false // data not found
+    }
+
 }
