@@ -138,5 +138,43 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         false
     }
     
+    /// Updates the first occurrence of the given data.
+    /// Returns true if successful, false otherwise.
+    pub fn update_element(&mut self, old_data: T, new_data: T) -> bool {
+        let mut current_index = self.head;
+
+        while let Some(index) = current_index {
+            if self.nodes[index].as_ref().unwrap().data == old_data {
+                self.nodes[index].as_mut().unwrap().data = new_data;
+                return true;
+            }
+            current_index = self.nodes[index].as_ref().unwrap().next;
+        }
+        false // data not found
+    }
+
+    /// Updates the node at index (0-based).
+    /// Returns true if successful, false otherwise.
+    pub fn update_at_index(&mut self, index: usize, data: T) -> bool {
+        if index >= N {
+            return false;
+        }
+
+        let mut current_index = self.head;
+        let mut i = 0;
+        
+        while let Some(current) = current_index {
+            if i == index {
+                self.nodes[current].as_mut().unwrap().data = data;
+                return true;
+            }
+            i += 1;
+            current_index = self.nodes[current].as_ref().unwrap().next;
+        }
+        false
+    }
+
+
+    
 
 }
