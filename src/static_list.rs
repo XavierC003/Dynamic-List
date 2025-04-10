@@ -92,21 +92,23 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
 
     /// Deletes the first occurrence of the given data.
     pub fn delete_element(&mut self, data: T) -> bool {
-        let mut current_index = self.head;
+        let mut current_index: Option<usize> = self.head;
+        let mut prev_index: Option<usize> = None;
 
         while let Some(index) = current_index {
             if self.nodes[index].as_ref().unwrap().data == data {
-                if self.nodes[index].as_ref().unwrap().next.is_some() {
-                    self.nodes[index] = None;
-                    self.free.push(index);
+                if let Some(prev) = prev_index {
+                    let next = self.nodes[index].as_ref().unwrap().next;
+                    self.nodes[prev].as_mut().unwrap().next = next;
                 } else {
-                    self.nodes[index] = None;
-                    self.free.push(index);
-                    self.head;
-                    return true;
+                    self.head = self.nodes[index].as_ref().unwrap().next;
                 }
+
+                self.free.push(index);
+                self.nodes[index] = None;
                 return true;
             }
+            prev_index = current_index;
             current_index = self.nodes[index].as_ref().unwrap().next;
         }
         false // data not found
