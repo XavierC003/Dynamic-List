@@ -174,6 +174,18 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         false
     }
 
+    pub fn find(&self, data: T) -> bool {
+        let mut current_index = self.head;
+
+        while let Some(index) = current_index {
+            if self.nodes[index].as_ref().unwrap().data == data {
+                return true;
+            }
+            current_index = self.nodes[index].as_ref().unwrap().next;
+        }
+        false // data not found
+    }
+
 
     
 
