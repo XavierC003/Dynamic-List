@@ -19,7 +19,7 @@ impl<T: PartialEq + Copy> DynamicList<T> {
         let new_node = Box::new(Node { data, next: None });
         match self.head.as_mut() {
             None => self.head = Some(new_node),
-            Some(mut current) => {
+            Some(current) => {
                 let mut current = current.as_mut();
                 while current.next.is_some() {
                     current = current.next.as_mut().unwrap();
@@ -28,7 +28,7 @@ impl<T: PartialEq + Copy> DynamicList<T> {
             }
         }
     }
-
+    /// Gets the value at index (0-based).
     pub fn get(&self, index: usize) -> Option<T> {
         let mut current = self.head.as_ref();
         let mut i = 0;
@@ -43,30 +43,29 @@ impl<T: PartialEq + Copy> DynamicList<T> {
     
         None
     }
-
+    // Deletes the first occurrence of the given data.
     pub fn delete_element(&mut self, data: T) -> bool {
         let mut current = self.head.as_mut();
-        let mut prev: Option<&mut Box<Node<T>>> = None;
+        let mut prev: *mut Box<Node<T>> = std::ptr::null_mut();
 
         while let Some(node) = current {
             if node.data == data {
-                match prev {
-                    Some(prev_node) => {
-                        prev_node.next = node.next.take();
-                    }
-                    None => {
-                        self.head = node.next.take();
+                if prev.is_null() {
+                    self.head = node.next.take();
+                } else {
+                    unsafe {
+                        (*prev).next = node.next.take();
                     }
                 }
                 return true;
             }
-            prev = Some(current);
+            prev = node as *mut _;
             current = node.next.as_mut();
         }
 
         false
     }
-
+    // Inserts data at the given index (0-based).
     pub fn insert_at_index(&mut self, index: usize, data: T) -> bool {
         if index == 0 {
             let new_node = Box::new(Node { data, next: self.head.take() });
@@ -85,6 +84,62 @@ impl<T: PartialEq + Copy> DynamicList<T> {
             }
             i += 1;
             current = node.next.as_mut();
+        }
+
+        false
+    }
+    // Deletes the node at the given index (0-based).
+    pub fn delete_at_index(&mut self, index: usize) -> bool {
+        if index == 0 {
+            if self.head.is_some() {
+                self.head = self.head.take().unwrap().next;
+                return true;
+            }
+            return false;
+        }
+
+        let mut current = self.head.as_mut();
+        let mut i = 0;
+
+        while let Some(node) = current {
+            if i == index - 1 {
+                if let Some(next_node) = node.next.take() {
+                    node.next = next_node.next;
+                    return true;
+                }
+                return false;
+            }
+            i += 1;
+            current = node.next.as_mut();
+        }
+
+        false
+    }
+    // Updates the node at the given index (0-based).
+    pub fn update_at_index(&mut self, index: usize, data: T) -> bool {
+        let mut current = self.head.as_mut();
+        let mut i = 0;
+
+        while let Some(node) = current {
+            if i == index {
+                node.data = data;
+                return true;
+            }
+            i += 1;
+            current = node.next.as_mut();
+        }
+
+        false
+    }
+    // Finds the first occurrence of the given data.
+    pub fn find(&self, data: T) -> bool {
+        let mut current = self.head.as_ref();
+
+        while let Some(node) = current {
+            if node.data == data {
+                return true;
+            }
+            current = node.next.as_ref();
         }
 
         false
