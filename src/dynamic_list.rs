@@ -10,11 +10,20 @@ pub struct DynamicList<T> {
 }
 
 impl<T: PartialEq + Copy> DynamicList<T> {
+     /// Creates a new empty linked list.
+    ///
+    /// # Returns
+    ///
+    /// A new `DynamicList` with no elements.
     pub fn new() -> Self {
         DynamicList { head: None }
     }
 
-    /// Inserts data at the tail of the list.
+ /// Inserts data at the tail of the list.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The data to be inserted.
     pub fn insert(&mut self, data: T) {
         let new_node = Box::new(Node { data, next: None });
         match self.head.as_mut() {
@@ -28,7 +37,15 @@ impl<T: PartialEq + Copy> DynamicList<T> {
             }
         }
     }
-    /// Gets the value at index (0-based).
+      /// Retrieves the data at the specified index.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - The 0-based index of the node.
+    ///
+    /// # Returns
+    ///
+    /// `Some(data)` if the index is valid, `None` otherwise.
     pub fn get(&self, index: usize) -> Option<T> {
         let mut current = self.head.as_ref();
         let mut i = 0;
