@@ -1,5 +1,7 @@
 use linked_list_project::static_list::StaticList;
 
+
+/// Tests inserting a single element into the static linked list.
 #[test]
 fn test_insert() {
     let mut list = StaticList::<i32, 5>::new();
@@ -7,6 +9,8 @@ fn test_insert() {
     assert_eq!(list.get(0), Some(10)); // Check if inserted correctly
 }
 
+
+/// Tests inserting an element at a specific index in the static linked list.
 #[test]
 fn test_insert_at_index() {
     let mut list = StaticList::<i32, 5>::new();
@@ -16,6 +20,7 @@ fn test_insert_at_index() {
     assert_eq!(list.get(1), Some(15)); // Verify insertion at index 1
 }
 
+/// Tests deletion of the first occurrence of a specified element.
 #[test]
 fn test_delete_element() {
     let mut list = StaticList::<i32, 5>::new();
@@ -25,6 +30,8 @@ fn test_delete_element() {
     assert_eq!(list.get(0), Some(20)); // Verify the list after deletion
 }
 
+
+/// Tests deletion of the element at a specific index in the static linked list.
 #[test]
 fn test_delete_at_index() {
     let mut list = StaticList::<i32, 5>::new();
@@ -34,6 +41,8 @@ fn test_delete_at_index() {
     assert_eq!(list.get(0), Some(20)); // Verify the remaining element
 }
 
+
+/// Tests updating the first occurrence of a specified element.
 #[test]
 fn test_update_element() {
     let mut list = StaticList::<i32, 5>::new();
@@ -43,6 +52,7 @@ fn test_update_element() {
     assert_eq!(list.get(0), Some(30)); // Verify the update
 }
 
+/// Tests finding an element in the static linked list.
 #[test]
 fn test_find() {
     let mut list = StaticList::<i32, 5>::new();
