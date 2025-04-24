@@ -60,7 +60,16 @@ impl<T: PartialEq + Copy> DynamicList<T> {
     
         None
     }
-    // Deletes the first occurrence of the given data.
+    /// Deletes the first node that contains the specified data.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The data to be deleted.
+    ///
+    /// # Returns
+    ///
+    /// `true` if an element was deleted, otherwise `false`.
+
     pub fn delete_element(&mut self, data: T) -> bool {
         let mut current = self.head.as_mut();
         let mut prev: *mut Box<Node<T>> = std::ptr::null_mut();
@@ -82,7 +91,16 @@ impl<T: PartialEq + Copy> DynamicList<T> {
 
         false
     }
-    // Inserts data at the given index (0-based).
+    /// Inserts data at a specified index.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - The 0-based index to insert the data at.
+    /// * `data` - The data to be inserted.
+    ///
+    /// # Returns
+    ///
+    /// `true` if insertion was successful, otherwise `false`.
     pub fn insert_at_index(&mut self, index: usize, data: T) -> bool {
         if index == 0 {
             let new_node = Box::new(Node { data, next: self.head.take() });
@@ -105,7 +123,15 @@ impl<T: PartialEq + Copy> DynamicList<T> {
 
         false
     }
-    // Deletes the node at the given index (0-based).
+    /// Deletes the node at the specified index.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - The 0-based index of the node to delete.
+    ///
+    /// # Returns
+    ///
+    /// `true` if deletion was successful, otherwise `false`.
     pub fn delete_at_index(&mut self, index: usize) -> bool {
         if index == 0 {
             if self.head.is_some() {
@@ -132,7 +158,16 @@ impl<T: PartialEq + Copy> DynamicList<T> {
         false
     }
 
-    /// Updates the first occurrence of the given data.
+    /// Updates the first occurrence of `old_data` with `new_data`.
+    ///
+    /// # Arguments
+    ///
+    /// * `old_data` - The data to search for.
+    /// * `new_data` - The data to replace it with.
+    ///
+    /// # Returns
+    ///
+    /// `true` if update was successful, otherwise `false`.
     pub fn update_element(&mut self, old_data: T, new_data: T) -> bool {
         let mut current = self.head.as_mut();
 
@@ -146,7 +181,16 @@ impl<T: PartialEq + Copy> DynamicList<T> {
 
         false
     }
-    // Updates the node at the given index (0-based).
+       /// Updates the data at the specified index.
+    ///
+    /// # Arguments
+    ///
+    /// * `index` - The 0-based index to update.
+    /// * `data` - The new data to set.
+    ///
+    /// # Returns
+    ///
+    /// `true` if update was successful, otherwise `false`.
     pub fn update_at_index(&mut self, index: usize, data: T) -> bool {
         let mut current = self.head.as_mut();
         let mut i = 0;
@@ -162,7 +206,15 @@ impl<T: PartialEq + Copy> DynamicList<T> {
 
         false
     }
-    // Finds the first occurrence of the given data.
+    /// Checks whether a value exists in the list.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The data to search for.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the data exists in the list, otherwise `false`.
     pub fn find(&self, data: T) -> bool {
         let mut current = self.head.as_ref();
 
