@@ -4,6 +4,10 @@ struct Node<T> {
     next: Option<usize>,
 }
 
+/// A static array-based singly linked list implementation.
+/// # Type Parameters
+/// `T`: The type of data stored in the list.
+/// `N`: The maximum number of elements in the list.
 pub struct StaticList<T, const N: usize> {
     nodes: [Option<Node<T>>; N],
     head: Option<usize>,
@@ -25,7 +29,12 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         }
     }
 
-    /// Inserts at the tail of the list.
+    /// Inserts a new element at the tail (end) of the list.
+    /// # Parameters
+    /// `data`: The data to insert.
+    /// # Returns
+    /// `true` if insertion is successful.
+    /// `false` if the list is full.
     pub fn insert(&mut self, data: T) -> bool {
         if let Some(index) = self.free.pop() {
             let new_node = Node { data, next: None };
@@ -46,7 +55,12 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         }
     }
 
-    /// Gets the value at index (0-based).
+    /// Retrieves the value at a given index (0-based).
+    /// # Parameters
+    /// `i`: The index of the element to retrieve.
+    /// # Returns
+    /// `Some(value)` if the index is valid.
+    /// `None` otherwise.
     pub fn get(&self, mut i: usize) -> Option<T> {
         let mut current = self.head?;
         while i > 0 {
@@ -56,6 +70,9 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         Some(self.nodes[current]?.data)
     }
     /// Insert data at index (0-based).
+    /// # Parameters
+    /// `index`: The index at which to insert the data.
+    /// `data`: The data to insert.
     /// Returns true if successful, false otherwise.
     pub fn insert_at_index(&mut self, index: usize, data: T) -> bool {
         if index >= N {
@@ -90,7 +107,12 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         false // failed to insert
     }
 
-    /// Deletes the first occurrence of the given data.
+    /// Deletes the first occurrence of a specific value in the list.
+    /// # Parameters
+    /// `data`: The data to delete.
+    /// # Returns
+    /// `true` if the data is found and deleted.
+    /// `false` if the data is not found.
     pub fn delete_element(&mut self, data: T) -> bool {
         let mut current_index: Option<usize> = self.head;
         let mut prev_index: Option<usize> = None;
@@ -114,6 +136,8 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         false // data not found
     }
     /// Deletes the node at index (0-based).
+    ///  # Parameters
+    /// `index`: The index of the node to delete.
     /// Returns true if successful, false otherwise.
     pub fn delete_at_index(&mut self, index: usize) -> bool {
         if index >= N {
@@ -141,6 +165,9 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
     }
     
     /// Updates the first occurrence of the given data.
+    /// # Parameters
+    /// `old_data`: The value to search for.
+    /// `new_data`: The new value to replace it with.
     /// Returns true if successful, false otherwise.
     pub fn update_element(&mut self, old_data: T, new_data: T) -> bool {
         let mut current_index = self.head;
@@ -156,6 +183,8 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
     }
 
     /// Updates the node at index (0-based).
+    /// `index`: The index of the node to update.
+    /// `data`: The new value to assign.
     /// Returns true if successful, false otherwise.
     pub fn update_at_index(&mut self, index: usize, data: T) -> bool {
         if index >= N {
@@ -176,6 +205,11 @@ impl<T: Copy + PartialEq, const N: usize> StaticList<T, N> {
         false
     }
 
+    /// Checks if the list contains the given data.
+    /// # Parameters
+    /// `data`: The data to find.
+    /// `true` if the data exists in the list.
+    /// `false` otherwise.
     pub fn find(&self, data: T) -> bool {
         let mut current_index = self.head;
 
